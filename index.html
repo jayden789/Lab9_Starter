@@ -89,19 +89,194 @@
 
   <script>
     let form = document.querySelector('form');
+    // Defind some customed error classes
+    // Customed InvalidInputError
+    class InvalidInputError extends Error {
+        constructor(message) {
+            super(message);
+            this.name = 'InvalidInputError';
+        }
+    }
+
+    // Custome DivisionByZeroError
+    class DivisionByZeroError extends Error {
+        constructor(message) {
+            super(message);
+            this.name = 'DivisionByZeroError';
+        }
+    }
+
+    class EmptyInputError extends Error {
+        constructor(message) {
+            super(message);
+            this.name = 'DivisionByZeroError';
+        }
+    }
+
     form.addEventListener('submit', e => {
       e.preventDefault();
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+    // Using try-catch-throw block to validate the inputs
+    // The console prints out message 
+    // every time calculation is perform regardless off error or not
+    try {
+        // Check if input is empty
+        if (!firstNum || !secondNum) {
+            throw new EmptyInputError('EmptyInputError: Input is empty');
+        }
+
+        // Check if input is not numeric
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+            throw new InvalidInputError('InvalidInputError: Input is not a number');
+        }
+
+        firstNum = Number(firstNum);
+        secondNum = Number(secondNum);
+
+        // Throw a DivisionByZero if such case
+        if (operator == '/' && secondNum == 0) {
+            throw new DivisionByZeroError('DivisionByZeroError: Divided by 0');
+        }
+
+        // Perform calculation
+        let result;
+        switch (operator) {
+            case '+':
+                result = firstNum + secondNum;
+                break;
+            case '-':
+                result = firstNum - secondNum;
+                break;
+            case '*':
+                result = firstNum * secondNum;
+                break;
+            case '/':
+                result = firstNum / secondNum;
+                break;
+        }
+
+        output.innerHTML = result;
+    } catch(e) {
+        if (e instanceof InvalidInputError ||
+            e instanceof DivisionByZeroError ||
+            e instanceof EmptyInputError) {
+
+            output.innerHTML='';
+            console.error(e.message);
+        } else {
+            // Throw error if some errors else
+            throw new Error('An unexpected error occured');
+        }
+    } finally {
+        console.log('Attempted calculation :)');
+    }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // Console log
+    errorBtns[0].addEventListener('click', () => {
+        console.log('Console Log Demo');
+    });
+
+    // Console Error
+    errorBtns[1].addEventListener('click', () => {
+        console.error('Console Error Demo');
+    })
+
+    // Console count
+    errorBtns[2].addEventListener('click', () => {
+        console.count('Console Button');
+    })
+
+    // Console Warn
+    errorBtns[3].addEventListener('click', () => {
+        console.warn('Console Warn Button');
+    })
+
+    // Console Assert
+    errorBtns[4].addEventListener('click', () => {
+        const x = 5;
+        const y = '5';
+        const reason = 'They are not strictly equal';
+        console.assert(x === y, { x, y, reason });
+    });
+
+    // Console clear
+    errorBtns[5].addEventListener('click', () => {
+        console.countReset('Console Button')
+        console.clear();
+    })
+
+    // Console dir
+    errorBtns[6].addEventListener('click', () => {
+        console.dir(errorBtns[6]);
+    }); 
+    
+    // Console dirxml
+    errorBtns[7].addEventListener('click', () => {
+        console.dirxml(errorBtns[7]);
+    });
+
+    // Console Group Start
+    const label = 'console.group';
+    errorBtns[8].addEventListener('click', () => {
+        console.group(label);
+    });
+
+    // Console Group End
+    errorBtns[9].addEventListener('click', () => {
+        console.groupEnd(label);
+    });
+
+    // Console table
+    errorBtns[10].addEventListener('click', () => {
+        const people = [
+            {
+                Class: 'CSE 110',
+                Department: 'CSE',
+            },
+            {
+                Class: 'CSE 140',
+                Department: 'CSE',
+            },
+            {
+                Class: 'ECE 109',
+                Department: 'ECE',
+            },
+            {
+                Class: 'COGS 108',
+                Department: 'COGS',
+            },      
+        ];
+        console.table(people);
+    });
+
+    // Console timer
+    const timer = 'Timer Button';
+    errorBtns[11].addEventListener('click', () => {
+        console.time(timer);
+    });
+    errorBtns[12].addEventListener('click', () => {
+        console.timeEnd(timer);
+    });
+
+    // Console trace
+    errorBtns[13].addEventListener('click', () => {
+        const fourth = () => { third(); };
+        const third = () => { second(); };
+        const second = () => { first(); };
+        const first = () => { console.trace(); };
+        fourth();
+    });
+
   </script>
 </body>
 
