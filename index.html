@@ -172,7 +172,7 @@
             throw new Error('An unexpected error occured');
         }
     } finally {
-        console.log('Attempted calculation :)');
+        console.count('Calculation attempt');
     }
     });
 
@@ -212,6 +212,7 @@
     // Console clear
     errorBtns[5].addEventListener('click', () => {
         console.countReset('Console Button')
+        console.countReset('Calculation attempt')
         console.clear();
     })
 
