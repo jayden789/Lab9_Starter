@@ -6,6 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lab 9</title>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "faf1b548e31a428d9b0420424d8ad242",
+    application: "my-app-example"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
 
   <style>
     button {
@@ -125,7 +133,7 @@
     // every time calculation is perform regardless off error or not
     try {
         // Check if input is empty
-        if (!firstNum || !secondNum) {
+        if (!firstNum.trim() || firstNum.trim() == '' || !secondNum.trim() || secondNum.trim() == '') {
             throw new EmptyInputError('EmptyInputError: Input is empty');
         }
 
@@ -277,6 +285,17 @@
         const first = () => { console.trace(); };
         fourth();
     });
+
+    //Trigger a Global Error
+    errorBtns[14].addEventListener('click', () => {
+        //TrackJS.track('Testing TrackJS!');
+        throw new ReferenceError('Trigger a Global Error');                
+    });
+
+    window.onerror = function() {
+      console.log("There is an error somewhere");
+        TrackJS.track('Testing TrackJS!');
+    };
 
   </script>
 </body>
